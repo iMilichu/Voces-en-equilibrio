@@ -123,34 +123,78 @@ window.addEventListener('scroll', () => {
     lastScroll = currentScroll;
 });
 
-// Manejo del formulario de contacto
-const contactForm = document.getElementById('contactForm');
+// Carrusel de testimonios
+let currentTestimonial = 0;
+const testimonials = document.querySelectorAll('.testimonial-slide');
+const totalTestimonials = testimonials.length;
+const prevButton = document.getElementById('prevTestimonial');
+const nextButton = document.getElementById('nextTestimonial');
+const indicatorsContainer = document.getElementById('carouselIndicators');
 
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+// Crear indicadores
+for (let i = 0; i < totalTestimonials; i++) {
+    const indicator = document.createElement('div');
+    indicator.classList.add('indicator');
+    if (i === 0) indicator.classList.add('active');
+    indicator.addEventListener('click', () => goToTestimonial(i));
+    indicatorsContainer.appendChild(indicator);
+}
+
+const indicators = document.querySelectorAll('.indicator');
+
+function showTestimonial(index) {
+    testimonials.forEach((slide, i) => {
+        slide.classList.remove('active', 'prev');
+        if (i === index) {
+            slide.classList.add('active');
+        } else if (i < index) {
+            slide.classList.add('prev');
+        }
+    });
     
-    // Animación de envío
-    const submitButton = contactForm.querySelector('.submit-button');
-    const originalText = submitButton.textContent;
-    
-    submitButton.textContent = 'Mittentes...';
-    submitButton.disabled = true;
-    
-    // Simular envío (aquí iría la lógica real de envío)
-    setTimeout(() => {
-        submitButton.textContent = 'Missum! ✓';
-        submitButton.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-        
-        // Limpiar formulario
-        contactForm.reset();
-        
-        // Restaurar botón después de 3 segundos
-        setTimeout(() => {
-            submitButton.textContent = originalText;
-            submitButton.style.background = '';
-            submitButton.disabled = false;
-        }, 3000);
-    }, 1500);
+    indicators.forEach((indicator, i) => {
+        indicator.classList.toggle('active', i === index);
+    });
+}
+
+function nextTestimonial() {
+    currentTestimonial = (currentTestimonial + 1) % totalTestimonials;
+    showTestimonial(currentTestimonial);
+}
+
+function prevTestimonial() {
+    currentTestimonial = (currentTestimonial - 1 + totalTestimonials) % totalTestimonials;
+    showTestimonial(currentTestimonial);
+}
+
+function goToTestimonial(index) {
+    currentTestimonial = index;
+    showTestimonial(currentTestimonial);
+}
+
+nextButton.addEventListener('click', nextTestimonial);
+prevButton.addEventListener('click', prevTestimonial);
+
+// Auto-avance del carrusel cada 5 segundos
+let autoplayInterval = setInterval(nextTestimonial, 5000);
+
+// Pausar auto-avance al pasar el mouse sobre el carrusel
+const carousel = document.querySelector('.testimonial-carousel');
+carousel.addEventListener('mouseenter', () => {
+    clearInterval(autoplayInterval);
+});
+
+carousel.addEventListener('mouseleave', () => {
+    autoplayInterval = setInterval(nextTestimonial, 5000);
+});
+
+// Soporte para teclado
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+        prevTestimonial();
+    } else if (e.key === 'ArrowRight') {
+        nextTestimonial();
+    }
 });
 
 // Efecto parallax suave en hero
@@ -167,7 +211,7 @@ window.addEventListener('scroll', () => {
 });
 
 // Añadir clase de entrada a elementos cuando son visibles
-const fadeElements = document.querySelectorAll('.about-text, .about-image, .contact-info, .contact-form');
+const fadeElements = document.querySelectorAll('.about-text, .about-image, .testimonial-carousel');
 
 const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -179,7 +223,9 @@ const fadeObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.2 });
 
 fadeElements.forEach(element => {
-    fadeObserver.observe(element);
+    if (element) {
+        fadeObserver.observe(element);
+    }
 });
 
 // Console message
