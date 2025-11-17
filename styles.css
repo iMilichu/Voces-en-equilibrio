@@ -274,13 +274,15 @@ body.no-scroll {
 }
 
 .articles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    display: flex;
+    flex-wrap: wrap;           
     gap: 2rem;
+    justify-content: center;   
     margin-top: 2rem;
 }
 
 .article-card {
+    max-width: 350px;        
     background: var(--white);
     padding: 2rem;
     border-radius: 15px;
@@ -288,7 +290,7 @@ body.no-scroll {
     transition: transform 0.3s, box-shadow 0.3s;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
 }
 
 .article-card:hover {

@@ -236,4 +236,4 @@ fadeElements.forEach(element => {
 
 // Console message
 console.log('%c🌟 Voces en Equilibrio', 'color: #8b5cf6; font-size: 24px; font-weight: bold;');
-console.log('%cLorem ipsum dolor sit amet, consectetur adipiscing elit.', 'color: #6b7280; font-size: 14px;');
+console.log('%cHello', 'color: #6b7280; font-size: 14px;');
