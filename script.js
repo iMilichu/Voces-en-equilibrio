@@ -1,29 +1,35 @@
-// Menu Toggle para móviles
+//menu toggle
 const menuToggle = document.getElementById('menuToggle');
 const navMenu = document.getElementById('navMenu');
+const navLinks = navMenu.querySelectorAll('a');
 
 menuToggle.addEventListener('click', () => {
     navMenu.classList.toggle('active');
     
-    // Animación del botón hamburguesa
+    // Hamburger animation
     const spans = menuToggle.querySelectorAll('span');
-    spans[0].style.transform = navMenu.classList.contains('active') 
-        ? 'rotate(45deg) translate(5px, 5px)' 
-        : 'none';
-    spans[1].style.opacity = navMenu.classList.contains('active') ? '0' : '1';
-    spans[2].style.transform = navMenu.classList.contains('active') 
-        ? 'rotate(-45deg) translate(7px, -6px)' 
-        : 'none';
-});
-
-// Cerrar menú al hacer click en un link
-navMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        const spans = menuToggle.querySelectorAll('span');
+    if(navMenu.classList.contains('active')){
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+        document.body.classList.add('no-scroll'); // when active no scroll class is added to body thus .body no-scroll works and no scroll is allowed
+    } else {
         spans[0].style.transform = 'none';
         spans[1].style.opacity = '1';
         spans[2].style.transform = 'none';
+        document.body.classList.remove('no-scroll'); // scroll is allowed by removing no scroll class from body
+    }
+});
+
+// Close menu and reset hamburger when a link is clicked
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {  // check each nav link if clicked
+        navMenu.classList.remove('active');
+        const spans = menuToggle.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';        // reset hamburger icon
+        spans[2].style.transform = 'none';
+        document.body.classList.remove('no-scroll');  // allow scrolling
     });
 });
 
@@ -44,7 +50,7 @@ function animateNumbers() {
                 stat.textContent = Math.floor(current);
                 setTimeout(updateNumber, stepTime);
             } else {
-                stat.textContent = target;
+                stat.textContent = target + '%';
             }
         };
         
